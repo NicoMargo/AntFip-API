@@ -16,9 +16,7 @@ namespace IT_Arg_API.Controllers
         public string Get(int id)
         {
             return "value";
-        }
-
-        
+        }        
        
 
         [HttpPost]
@@ -29,10 +27,10 @@ namespace IT_Arg_API.Controllers
             string success = "" ;
             try
             {
-                if (user.Password != null && user.Username != null)
+                if (user.Password != null && user.BusinessName != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
-                         {"pUsername",user.Username},
+                         {"pBusinessName",user.BusinessName},
                          {"pPassword",user.Password},
                     };
                     success = Convert.ToString(DBHelper.callProcedureReader("spUserCreate", args));                    

@@ -55,7 +55,12 @@ namespace IT_Arg_API.Models.Helpers
 
             SqlDataReader ConnectionReader = CommandConnection.ExecuteReader();
             ConnectionReader.Read();
-            json = Convert.ToString(ConnectionReader[0]);
+            try
+            {
+                json = Convert.ToString(ConnectionReader[0]);
+            }catch (Exception ex)
+            {
+            }
             Disconect();
             ConnectionReader.DisposeAsync();
             CommandConnection.Dispose();
