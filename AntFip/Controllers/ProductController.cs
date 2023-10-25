@@ -19,7 +19,7 @@ namespace IT_Arg_API.Controllers
             catch (Exception e)
             {
 
-                return StatusCode(500, "Error al obtener la informacion de los clientes " + e.Message);
+                return StatusCode(500, "Error al obtener la informacion de los clientes." + e.Message);
             }
         }
 
@@ -35,14 +35,14 @@ namespace IT_Arg_API.Controllers
             }
             catch
             {
-                return StatusCode(500, "Error al obtener la informacion de los alumnos");
+                return StatusCode(500, "Error al obtener la informacion de los alumnos.");
             }
         }
 
         [HttpPost("Delete/{id}")]
         public IActionResult Delete(int id)
         {
-            string success = "Error al eliminar el producto";
+            string success = "Error al eliminar el producto.";
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
@@ -67,7 +67,7 @@ namespace IT_Arg_API.Controllers
         [HttpPost]
         public IActionResult Create(Product product = null)
         {
-            string success = "Error al crear el producto";
+            string success = "Error al crear el producto.";
             try
             {
                 if (product.Name != null && product.Description != null)
@@ -102,7 +102,7 @@ namespace IT_Arg_API.Controllers
         [HttpPost("Update")]
         public IActionResult Update(Product product)
         {
-            string success = "Error al modificar el producto";
+            string success = "Error al modificar el producto.";
             try
             {
                 if (product.Name != null && product.Description != null && product.Id != null)
@@ -130,7 +130,7 @@ namespace IT_Arg_API.Controllers
                 }
                 else
                 {
-                    success = "El nombre y descripcion no pueden estar vacios";
+                    success = "El nombre y descripcion no pueden estar vacios.";
                 }
             }
             catch
