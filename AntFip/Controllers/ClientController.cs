@@ -8,7 +8,7 @@ namespace IT_Arg_API.Controllers
     [Route("[controller]")]
     [ApiController]
     public class ClientController : ControllerBase
-    {
+    { 
         [HttpGet]
         public IActionResult ClientGet()
         {
@@ -26,7 +26,7 @@ namespace IT_Arg_API.Controllers
 
         [HttpGet("{id}")]
         public IActionResult ClientGetById(int id)
-        {
+        { 
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
@@ -49,7 +49,7 @@ namespace IT_Arg_API.Controllers
                 Dictionary<string, object> args = new Dictionary<string, object> {
                     {"pId",id}
                 };
-
+                 
                 success = DBHelper.CallNonQuery("spClientDelete", args);
 
                 if (success == "1")
@@ -107,7 +107,7 @@ namespace IT_Arg_API.Controllers
                 if (client.Surname != null && client.Name != null && client.Id != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
-                        {"pId", client.Id},
+                         {"pId", client.Id},
                          {"pName",client.Name},
                          {"pSurname",client.Surname},
                          {"pDni",client.Dni},
@@ -135,6 +135,6 @@ namespace IT_Arg_API.Controllers
             }
             return StatusCode(500, success);
         }
-
+         
     }
 }
