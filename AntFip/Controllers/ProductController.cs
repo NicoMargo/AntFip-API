@@ -7,17 +7,14 @@ namespace IT_Arg_API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class ClientController : ControllerBase
-    { 
+    public class ProductController : ControllerBase
+    {
         [HttpGet]
-        public IActionResult ClientGet()
+        public IActionResult ProductGet()
         {
             try
             {
-                Dictionary<string, object> args = new Dictionary<string, object> {
-                    {"pPage",0}
-                };
-                return Ok(DBHelper.callProcedureReader("spClientGetAll", args));
+                return Ok(DBHelper.callProcedureReader("spProductGetAll"));
             }
             catch (Exception e)
             {
@@ -26,16 +23,15 @@ namespace IT_Arg_API.Controllers
             }
         }
 
-
         [HttpGet("{id}")]
-        public IActionResult ClientGetById(int id)
-        { 
+        public IActionResult ProductGetById(int id)
+        {
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
                     {"pId",id}
                 };
-                return Ok(DBHelper.callProcedureReader("spClientGetById", args));
+                return Ok(DBHelper.callProcedureReader("spProductGetById", args));
             }
             catch
             {
@@ -46,14 +42,14 @@ namespace IT_Arg_API.Controllers
         [HttpPost("Delete/{id}")]
         public IActionResult Delete(int id)
         {
-            string success ="Error al eliminar al cliente";
+            string success = "Error al eliminar el producto";
             try
-            {               
+            {
                 Dictionary<string, object> args = new Dictionary<string, object> {
                     {"pId",id}
                 };
-                 
-                success = DBHelper.CallNonQuery("spClientDelete", args);
+
+                success = DBHelper.CallNonQuery("spProductDelete", args);
 
                 if (success == "1")
                 {
@@ -69,22 +65,24 @@ namespace IT_Arg_API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Client client = null)
+        public IActionResult Create(Product product = null)
         {
-            string success = "Error al crear al cliente" ;
+            string success = "Error al crear el producto";
             try
             {
-                if (client.Surname != null && client.Name != null)
+                if (product.Name != null && product.Description != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
-                         {"pName",client.Name},
-                         {"pSurname",client.Surname},
-                         {"pDni",client.Dni},
-                         {"pAddress",client.Address},
-                         {"pPhone",client.Phone},
-                         {"pEmail",client.Email},
+                         {"pName",product.Name},
+                         {"pDescription",product.Description},
+                         {"pStock",product.Stock},
+                         {"pPhoto",product.Photo},
+                         {"pCode",product.Code},
+                         {"pPrice",product.Price},
                     };
-                    success = DBHelper.CallNonQuery("spClientCreate", args);  
+
+                    success = DBHelper.CallNonQuery("spProductCreate", args);
+
                     if (success == "1")
                     {
                         return Ok();
@@ -94,7 +92,7 @@ namespace IT_Arg_API.Controllers
                         return StatusCode(500, success);
                     }
                 }
-            }                
+            }
             catch
             {
             }
@@ -102,23 +100,25 @@ namespace IT_Arg_API.Controllers
         }
 
         [HttpPost("Update")]
-        public IActionResult Update(Client client)
+        public IActionResult Update(Product product)
         {
-            string success = "Error al modificar al cliente";
+            string success = "Error al modificar el producto";
             try
             {
-                if (client.Surname != null && client.Name != null && client.Id != null)
+                if (product.Name != null && product.Description != null && product.Id != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
-                         {"pId", client.Id},
-                         {"pName",client.Name},
-                         {"pSurname",client.Surname},
-                         {"pDni",client.Dni},
-                         {"pAddress",client.Address},
-                         {"pPhone",client.Phone},
-                         {"pEmail",client.Email},
+                         {"pId", product.Id},
+                         {"pName",product.Name},
+                         {"pDescription",product.Description},
+                         {"pStock",product.Stock},
+                         {"pPhoto",product.Photo},
+                         {"pCode",product.Code},
+                         {"pPrice",product.Price},
                     };
-                    success = DBHelper.CallNonQuery("spClientUpdate", args);
+
+                    success = DBHelper.CallNonQuery("spProductUpdate", args);
+
                     if (success == "1")
                     {
                         return Ok();
@@ -130,7 +130,7 @@ namespace IT_Arg_API.Controllers
                 }
                 else
                 {
-                    success = "El nombre y apellido no pueden estar vacios";
+                    success = "El nombre y descripcion no pueden estar vacios";
                 }
             }
             catch
@@ -138,6 +138,6 @@ namespace IT_Arg_API.Controllers
             }
             return StatusCode(500, success);
         }
-         
+
     }
 }
