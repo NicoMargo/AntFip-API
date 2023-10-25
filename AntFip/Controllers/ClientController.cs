@@ -14,7 +14,10 @@ namespace IT_Arg_API.Controllers
         {
             try
             {
-                return Ok(DBHelper.callProcedureReader("spClientGetAll"));
+                Dictionary<string, object> args = new Dictionary<string, object> {
+                    {"pPage",0}
+                };
+                return Ok(DBHelper.callProcedureReader("spClientGetAll", args));
             }
             catch (Exception e)
             {
