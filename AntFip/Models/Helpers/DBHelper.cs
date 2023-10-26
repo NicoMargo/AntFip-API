@@ -119,51 +119,44 @@ namespace IT_Arg_API.Models.Helpers
             return affectedRows;
         }
 
-        public static List<Dictionary<object, object>> callProcedureDataTableReader(string procedureName, string typeName, DataTable dataTable, Dictionary<object, object> args = null)
+
+
+
+        public static List<Dictionary<string, object>> callProcedureDataTableReader(string procedureName, string typeName, DataTable dataTable, Dictionary<string, object> args = null)
         {
             if (string.IsNullOrEmpty(procedureName) || dataTable == null || string.IsNullOrEmpty(typeName))
             {
                 throw new ArgumentException("Invalid argument(s) provided.");
             }
 
-            List<Dictionary<object, object>> results = new List<Dictionary<object, object>>();
+            List<Dictionary<string, object>> results = new List<Dictionary<string, object>>(dataTable.Rows.Count);
 
             try
             {
                 Connect();
 
-                using (SqlCommand CommandConnection = _connection.CreateCommand())
+                using var CommandConnection = _connection.CreateCommand();
+                CommandConnection.CommandType = CommandType.StoredProcedure;
+                CommandConnection.CommandText = procedureName;
+
+                foreach (KeyValuePair<string, object> arg in args ?? Enumerable.Empty<KeyValuePair<string, object>>())
                 {
-                    CommandConnection.CommandType = CommandType.StoredProcedure;
-                    CommandConnection.CommandText = procedureName;
+                    CommandConnection.Parameters.AddWithValue("@" + arg.Key, arg.Value);
+                }
 
-                    if (args != null)
-                    {
-                        foreach (KeyValuePair<object, object> arg in args)
-                        {
-                            CommandConnection.Parameters.AddWithValue("@" + arg.Key, arg.Value);
-                        }
-                    }
+                SqlParameter parameter = CommandConnection.Parameters.AddWithValue("p" + typeName, dataTable);
+                parameter.SqlDbType = SqlDbType.Structured;
+                parameter.TypeName = "dbo." + typeName;
 
-                    if (dataTable != null && !string.IsNullOrEmpty(typeName))
+                using var reader = CommandConnection.ExecuteReader();
+                while (reader.Read())
+                {
+                    Dictionary<string, object> row = new Dictionary<string, object>(reader.FieldCount);
+                    for (int i = 0; i < reader.FieldCount; i++)
                     {
-                        SqlParameter parameter = CommandConnection.Parameters.AddWithValue("p" + typeName, dataTable);
-                        parameter.SqlDbType = SqlDbType.Structured;
-                        parameter.TypeName = "dbo." + typeName;
+                        row[reader.GetName(i)] = reader.GetValue(i);
                     }
-
-                    using (SqlDataReader reader = CommandConnection.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Dictionary<object, object> row = new Dictionary<object, object>();
-                            for (int i = 0; i < reader.FieldCount; i++)
-                            {
-                                row[reader.GetName(i)] = reader.GetValue(i);
-                            }
-                            results.Add(row);
-                        }
-                    }
+                    results.Add(row);
                 }
             }
             catch (Exception ex)
@@ -177,6 +170,7 @@ namespace IT_Arg_API.Models.Helpers
 
             return results;
         }
+
 
 
 

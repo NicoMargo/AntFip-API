@@ -29,8 +29,26 @@ namespace IT_Arg_API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Receipt receipt)
+        public IActionResult Create()
         {
+            Receipt receipt = new Receipt();
+            receipt.ReceiptLineList = new List<ReceiptLine>();
+            ReceiptLine line1 = new ReceiptLine();
+            line1.Quantity = 3;
+            line1.IdProduct = 1;
+
+            ReceiptLine line2 = new ReceiptLine();
+            line2.Quantity = 2;
+            line2.IdProduct = 2;
+
+            ReceiptLine line3 = new ReceiptLine();
+            line3.Quantity = 1;
+            line3.IdProduct = 5;
+
+            receipt.ReceiptLineList.Add(line1);
+            receipt.ReceiptLineList.Add(line2); 
+            receipt.ReceiptLineList.Add(line3); 
+
             int success;
             try
             {

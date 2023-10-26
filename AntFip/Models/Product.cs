@@ -18,34 +18,34 @@ namespace IT_Arg_API.Models
         }
 
         public List<ReceiptLine> GetListProductsPricesById(List<ReceiptLine> receiptLineList)
-        {            
-            DataTable productIdsTable = new DataTable();
+        {
+            using DataTable productIdsTable = new DataTable();
             productIdsTable.Columns.Add("IdProduct", typeof(int));
+
+            HashSet<int> uniqueProductIds = new HashSet<int>(receiptLineList.Select(r => r.IdProduct));
+
+            foreach (var id in uniqueProductIds)
+            {
+                productIdsTable.Rows.Add(id);
+            }
+
+            List<Dictionary<string, object>> productPricesList = DBHelper.callProcedureDataTableReader("spProductsGetPricesById", "ProductsIdsTableType", productIdsTable);
+
+            var priceLookup = productPricesList.ToDictionary(
+                item => (int)item["id"],
+                item => (double)item["price"]);
 
             foreach (var line in receiptLineList)
             {
-                DataRow row = productIdsTable.NewRow();
-                row["IdProduct"] = Convert.ToInt32(line.IdProduct);
-                productIdsTable.Rows.Add(row);
+                if (priceLookup.TryGetValue(line.IdProduct, out double price))
+                {
+                    line.Price = price;
+                }
             }
-
-            //all of this is broken
-            //List<Dictionary<object, object>> productPrices = DBHelper.callProcedureDataTableReader("spProductsGetPricesById", "TypeNameChiaraXd", productIdsTable);
-
-            //foreach (var line in receiptLineList)
-            //{
-            //    if (productPrices.TryGetValue(Convert.ToInt32(line.IdProduct), out double price))
-            //    {
-            //        line.Price = price;
-            //    }
-            //    else
-            //    {
-
-            //    }
-            //}
 
             return receiptLineList;
         }
+
         public int? Id { get => _id; set => _id = value; }
         public string Name { get => _name; set => _name = value; }
         public string Description { get => _description; set => _description = value; }

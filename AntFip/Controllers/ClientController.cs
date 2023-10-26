@@ -9,9 +9,10 @@ namespace IT_Arg_API.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-        [HttpGet("{id}")]
-        public IActionResult ClientGetByIdUser(int id)
+        [HttpGet]
+        public IActionResult ClientGetByIdUser()
         {
+            int id = 2;
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
