@@ -2,8 +2,7 @@
 {
     public class ReceiptLine
     {
-        private int _id;
-        private string _productCode;
+        private int _idProduct;
         private double _price;
         private int _quantity;
 
@@ -12,9 +11,13 @@
 
         }
 
-        public int Id { get => _id; set => _id = value; }
-        public string ProductCode { get => _productCode; set => _productCode = value; }
+        public int IdProduct { get => _idProduct; set => _idProduct = value; }
         public double Price { get => _price; set => _price = value; }
         public int Quantity { get => _quantity; set => _quantity = value; }
+
+        public double GetSubtotal()
+        {
+            return _quantity * _price;
+        }
     }
 }

@@ -85,31 +85,99 @@ namespace IT_Arg_API.Models.Helpers
             args.Clear();
             return result;            
         }
-        public static string CallNonQueryTable(string procedureName, Dictionary<string, object> args, DataTable dataTable, string typeName)
+        public static int CallNonQueryTable(string procedureName, Dictionary<string, object> args, DataTable dataTable, string typeName)
         {
-            Connect();                
-                    
-            SqlCommand CommandConnection = _connection.CreateCommand();
-            CommandConnection.CommandType = CommandType.StoredProcedure;
-            CommandConnection.CommandText = procedureName;
+            if (string.IsNullOrEmpty(procedureName) || dataTable == null || string.IsNullOrEmpty(typeName))
+            {
+                throw new ArgumentException("Invalid argument(s) provided.");
+            }
+            Connect();
+            int affectedRows = 0;
 
-            if (args != null) {
-                foreach (string arg in args.Keys)
+            using (SqlCommand CommandConnection = _connection.CreateCommand())
+            {
+                CommandConnection.CommandType = CommandType.StoredProcedure;
+                CommandConnection.CommandText = procedureName;
+
+                if (args != null)
                 {
-                    CommandConnection.Parameters.AddWithValue("@" + arg, args[arg]);
+                    foreach (KeyValuePair<string, object> arg in args)
+                    {
+                        CommandConnection.Parameters.AddWithValue("@" + arg.Key, arg.Value);
+                    }
                 }
-            }            
 
-            SqlParameter parameter = CommandConnection.Parameters.AddWithValue("p"+ typeName, dataTable);
-            parameter.SqlDbType = SqlDbType.Structured;
-            parameter.TypeName = "dbo." + typeName;
-            
-            string result = Convert.ToString(CommandConnection.ExecuteNonQuery());
+                SqlParameter parameter = CommandConnection.Parameters.AddWithValue("p" + typeName, dataTable);
+                parameter.SqlDbType = SqlDbType.Structured;
+                parameter.TypeName = "dbo." + typeName;
+
+                affectedRows = CommandConnection.ExecuteNonQuery();
+            }
+
             Disconect();
-            CommandConnection.Dispose();
             args.Clear();
-            return result;
+            return affectedRows;
         }
+
+        public static List<Dictionary<object, object>> callProcedureDataTableReader(string procedureName, string typeName, DataTable dataTable, Dictionary<object, object> args = null)
+        {
+            if (string.IsNullOrEmpty(procedureName) || dataTable == null || string.IsNullOrEmpty(typeName))
+            {
+                throw new ArgumentException("Invalid argument(s) provided.");
+            }
+
+            List<Dictionary<object, object>> results = new List<Dictionary<object, object>>();
+
+            try
+            {
+                Connect();
+
+                using (SqlCommand CommandConnection = _connection.CreateCommand())
+                {
+                    CommandConnection.CommandType = CommandType.StoredProcedure;
+                    CommandConnection.CommandText = procedureName;
+
+                    if (args != null)
+                    {
+                        foreach (KeyValuePair<object, object> arg in args)
+                        {
+                            CommandConnection.Parameters.AddWithValue("@" + arg.Key, arg.Value);
+                        }
+                    }
+
+                    if (dataTable != null && !string.IsNullOrEmpty(typeName))
+                    {
+                        SqlParameter parameter = CommandConnection.Parameters.AddWithValue("p" + typeName, dataTable);
+                        parameter.SqlDbType = SqlDbType.Structured;
+                        parameter.TypeName = "dbo." + typeName;
+                    }
+
+                    using (SqlDataReader reader = CommandConnection.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Dictionary<object, object> row = new Dictionary<object, object>();
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                row[reader.GetName(i)] = reader.GetValue(i);
+                            }
+                            results.Add(row);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Error while executing the stored procedure.", ex);
+            }
+            finally
+            {
+                Disconect();
+            }
+
+            return results;
+        }
+
 
 
     }

@@ -8,16 +8,17 @@ namespace IT_Arg_API.Controllers
     [Route("[controller]")]
     [ApiController]
     public class ClientController : ControllerBase
-    { 
-        [HttpGet]
-        public IActionResult ClientGet()
+    {
+        [HttpGet("{id}")]
+        public IActionResult ClientGetByIdUser(int id)
         {
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
-                    {"pPage",0}
+                    {"pPage",0},
+                    {"pIdUser", id}
                 };
-                return Ok(DBHelper.callProcedureReader("spClientGetAll", args));
+                return Ok(DBHelper.callProcedureReader("spClientGetAllByIdUser", args));
             }
             catch (Exception e)
             {
