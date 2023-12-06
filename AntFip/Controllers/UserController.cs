@@ -5,43 +5,46 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IT_Arg_API.Controllers
 {
-    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        
-        // GET api/<User>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }        
-       
 
         [HttpPost]
-        [Route("userCreate")]
-        [Authorize]       
-        public string Create(User user)
+        public IActionResult Create(User user)
         {
-            string success = "" ;
+            string success = "";
             try
             {
-                if (user.Password != null && user.BusinessName != null)
+                if (user.Password != null && user.BusinessName != null && user.Cuit != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
-                         {"pBusinessName",user.BusinessName},
+                         {"pName",user.BusinessName},
                          {"pPassword",user.Password},
+                         {"pCuit",user.Cuit}
                     };
-                    success = Convert.ToString(DBHelper.callProcedureReader("spUserCreate", args));                    
+
+                    success = Convert.ToString(DBHelper.CallNonQuery("spUserCreate", args));
+
+                    if (success == "1")
+                    {
+                        return Ok(success);
+                    }
+                    else
+                    {
+                        return StatusCode(500, "Error al crear el usuario");
+                    }
                 }
-            }                
-            catch
-            {                
             }
-            return success;
+            catch (Exception e)
+            {
+                return StatusCode(500, "Error al crear el usuario" + e.Message);
+
+            }
+            return StatusCode(500, "Error al crear el usuario");
+
         }
 
-        
+
     }
 }

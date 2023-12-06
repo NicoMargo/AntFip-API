@@ -112,7 +112,7 @@ namespace IT_Arg_API.Controllers
                 HttpContext.Response.Cookies.Delete("refreshToken");
 
 
-                int respond =  await _authService.Logout(refreshToken);
+                int respond = await _authService.Logout(refreshToken);
                 if (respond == 1)
                 {
                     return Ok();

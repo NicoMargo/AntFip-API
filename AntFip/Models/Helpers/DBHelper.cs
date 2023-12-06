@@ -12,10 +12,10 @@ namespace IT_Arg_API.Models.Helpers
         public static string ConnectionString { set => _connectionString = value; }
         public static void Connect()
         {
-            
+
             _connection = new SqlConnection(_connectionString);
-            _connection.Open();            
-            
+            _connection.Open();
+
         }
 
         public static void Disconect()
@@ -36,12 +36,12 @@ namespace IT_Arg_API.Models.Helpers
             string? json = "";
 
             Connect();
-            
+
             SqlCommand CommandConnection = _connection.CreateCommand();
             CommandConnection.CommandType = CommandType.StoredProcedure;
             CommandConnection.CommandText = procedureName;
 
-            if(args != null)
+            if (args != null)
             {
                 foreach (string arg in args.Keys)
                 {
@@ -55,12 +55,9 @@ namespace IT_Arg_API.Models.Helpers
 
             SqlDataReader ConnectionReader = CommandConnection.ExecuteReader();
             ConnectionReader.Read();
-            try
-            {
-                json = Convert.ToString(ConnectionReader[0]);
-            }catch (Exception ex)
-            {
-            }
+
+            json = Convert.ToString(ConnectionReader[0]);
+
             Disconect();
             ConnectionReader.DisposeAsync();
             CommandConnection.Dispose();
@@ -70,7 +67,7 @@ namespace IT_Arg_API.Models.Helpers
         public static string CallNonQuery(string procedureName, Dictionary<string, object> args)
         {
             Connect();
-                
+
             SqlCommand CommandConnection = _connection.CreateCommand();
             CommandConnection.CommandType = CommandType.StoredProcedure;
 
@@ -83,7 +80,7 @@ namespace IT_Arg_API.Models.Helpers
             Disconect();
             CommandConnection.Dispose();
             args.Clear();
-            return result;            
+            return result;
         }
         public static int CallNonQueryTable(string procedureName, Dictionary<string, object> args, DataTable dataTable, string typeName)
         {

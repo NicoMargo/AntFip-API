@@ -2,6 +2,7 @@
 using IT_Arg_API.Models.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace IT_Arg_API.Controllers
 {
@@ -12,12 +13,12 @@ namespace IT_Arg_API.Controllers
         [HttpGet]
         public IActionResult ClientGetByIdUser()
         {
-            int id = 2;
+            int? idUser = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
                     {"pPage",0},
-                    {"pIdUser", id}
+                    {"pIdUser", idUser}
                 };
                 return Ok(DBHelper.callProcedureReader("spClientGetAllByIdUser", args));
             }
@@ -74,9 +75,11 @@ namespace IT_Arg_API.Controllers
         public IActionResult Create(Client client = null)
         {
             string success = "Error al crear al cliente." ;
+            int? idUser = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
             try
             {
-                if (client.Surname != null && client.Name != null)
+                if (client.Surname != null && client.Name != null && idUser != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
                          {"pName",client.Name},
@@ -85,6 +88,7 @@ namespace IT_Arg_API.Controllers
                          {"pAddress",client.Address},
                          {"pPhone",client.Phone},
                          {"pEmail",client.Email},
+                         {"pIdUser", idUser},
                     };
                     success = DBHelper.CallNonQuery("spClientCreate", args);  
                     if (success == "1")
