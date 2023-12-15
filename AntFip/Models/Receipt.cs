@@ -6,7 +6,7 @@ namespace IT_Arg_API.Models
     {
         private DateTime _date;
         private float _total;
-        private string _CuitUser;
+        private User _user;
         private int _idClient;
         private List<ReceiptLine> _receiptLineList;
 
@@ -18,7 +18,7 @@ namespace IT_Arg_API.Models
 
         public DateTime Date { get => _date; set => _date = value; }
         public float Total { get => _total; set => _total = value; }
-        public string CuitUser { get => _CuitUser; set => _CuitUser = value; }
+        public User User { get => _user; set => _user = value; }
         public int IdClient { get => _idClient; set => _idClient = value; }
         public List<ReceiptLine> ReceiptLineList { get => _receiptLineList; set => _receiptLineList = value; }
 

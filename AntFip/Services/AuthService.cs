@@ -22,7 +22,7 @@ namespace IT_Arg_API.Services
         public async Task<Token> ReturnToken(AuthorizationRequest authorizationRequest)
         {
             Dictionary<string, object> args = new Dictionary<string, object> {
-                     {"pUsername",authorizationRequest.Username},
+                     {"pName",authorizationRequest.Username},
                      {"pPassword",authorizationRequest.Password},
             };
 
