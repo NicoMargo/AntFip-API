@@ -21,6 +21,8 @@ namespace IT_Arg_API.Controllers
             _authService = authService;
         }
 
+
+        // LOGIN 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(AuthorizationRequest authorizationRequest)
@@ -58,6 +60,7 @@ namespace IT_Arg_API.Controllers
         }
 
 
+        // NEW TOKEN
         [HttpPost]
         [Route("Refresh")]
         public async Task<IActionResult> NewToken(string refreshToken2)
@@ -96,6 +99,7 @@ namespace IT_Arg_API.Controllers
         }
 
 
+        // LOGOUT
         [HttpGet]
         [Route("Logout")]
         public async Task<IActionResult> Logout()

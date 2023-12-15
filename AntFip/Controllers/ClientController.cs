@@ -10,6 +10,8 @@ namespace IT_Arg_API.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
+
+        // GET BY ID USER
         [HttpGet]
         public IActionResult ClientGetByIdUser()
         {
@@ -30,6 +32,7 @@ namespace IT_Arg_API.Controllers
         }
 
 
+        // GET BY ID 
         [HttpGet("{id}")]
         public IActionResult ClientGetById(int id)
         { 
@@ -46,6 +49,8 @@ namespace IT_Arg_API.Controllers
             }
         }
 
+
+        // DELETE
         [HttpPost("Delete/{id}")]
         public IActionResult Delete(int id)
         {
@@ -71,6 +76,8 @@ namespace IT_Arg_API.Controllers
             }
         }
 
+
+        // CREATE
         [HttpPost]
         public IActionResult Create(Client client = null)
         {
@@ -107,6 +114,8 @@ namespace IT_Arg_API.Controllers
             return StatusCode(500, success);
         }
 
+
+        // UPDATE
         [HttpPost("Update")]
         public IActionResult Update(Client client)
         {
@@ -136,7 +145,7 @@ namespace IT_Arg_API.Controllers
                 }
                 else
                 {
-                    success = "Hay campos que no pueden estar vacios, vuelva a intentarlo.";
+                    success = "Hay campos invalidos, por favor vuelva a intentarlo.";
                 }
             }
             catch

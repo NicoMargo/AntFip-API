@@ -10,6 +10,8 @@ namespace IT_Arg_API.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
+
+        // GET ALL
         [HttpGet]
         public IActionResult ProductGet()
         {
@@ -24,6 +26,8 @@ namespace IT_Arg_API.Controllers
             }
         }
 
+
+        // GET BY ID
         [HttpGet("{id}")]
         public IActionResult ProductGetById(int id)
         {
@@ -40,6 +44,8 @@ namespace IT_Arg_API.Controllers
             }
         }
 
+
+        // GET BY ID USER
         [HttpGet("IdUser")]
         public IActionResult ProductGetByIdUser()
         {
@@ -58,6 +64,8 @@ namespace IT_Arg_API.Controllers
             }
         }
 
+
+        // DELETE
         [HttpPost("Delete/{id}")]
         public IActionResult Delete(int id)
         {
@@ -83,6 +91,8 @@ namespace IT_Arg_API.Controllers
             }
         }
 
+
+        // CREATE
         [HttpPost]
         public IActionResult Create(Product product = null)
         {
@@ -118,6 +128,8 @@ namespace IT_Arg_API.Controllers
             return StatusCode(500, success);
         }
 
+
+        // UPDATE
         [HttpPost("Update")]
         public IActionResult Update(Product product)
         {

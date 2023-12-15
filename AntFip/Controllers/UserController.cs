@@ -11,6 +11,7 @@ namespace IT_Arg_API.Controllers
     public class UserController : ControllerBase
     {
 
+        // CREATE
         [HttpPost]
         public IActionResult Create(User user)
         {
@@ -46,6 +47,8 @@ namespace IT_Arg_API.Controllers
 
         }
 
+
+        // DELETE
         [HttpPost("Delete/{id}")]
         public IActionResult Delete(int id)
         {

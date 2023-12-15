@@ -12,6 +12,8 @@ namespace IT_Arg_API.Controllers
     [ApiController]
     public class ReceiptController : ControllerBase
     {
+
+        // GET BY ID
         [HttpGet("{id}")]
         public IActionResult GetReceiptById(int id)
         {
@@ -29,6 +31,8 @@ namespace IT_Arg_API.Controllers
             }
         }
 
+
+        // GET BY ID USER
         [HttpGet]
         public IActionResult GetReceiptByIdUser()
         {
@@ -46,6 +50,8 @@ namespace IT_Arg_API.Controllers
             }
         }
 
+
+        // CREATE
         [HttpPost]
         public IActionResult Create(Receipt receipt)
         {            
