@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Security.Claims;
 
 namespace IT_Arg_API.Controllers
 {
@@ -20,7 +21,24 @@ namespace IT_Arg_API.Controllers
                 {
                     {"pId", id}
                 };
-                return Ok(DBHelper.callProcedureReader("spReceiptGetById", args));
+                return Ok(DBHelper.callProcedureReader("spVoucherGetById", args));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "Error al obtener la información del recibo. " + e.Message);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetReceiptByIdUser()
+        {
+            try
+            {
+                Dictionary<string, object> args = new Dictionary<string, object>
+                {
+                    {"pId", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
+                };
+                return Ok(DBHelper.callProcedureReader("spVoucherGetAllByIdUser", args));
             }
             catch (Exception e)
             {
@@ -29,25 +47,8 @@ namespace IT_Arg_API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create()
-        {
-            Receipt receipt = new Receipt();
-            receipt.ReceiptLineList = new List<ReceiptLine>();
-            ReceiptLine line1 = new ReceiptLine();
-            line1.Quantity = 3;
-            line1.IdProduct = 1;
-
-            ReceiptLine line2 = new ReceiptLine();
-            line2.Quantity = 2;
-            line2.IdProduct = 2;
-
-            ReceiptLine line3 = new ReceiptLine();
-            line3.Quantity = 1;
-            line3.IdProduct = 5;
-
-            receipt.ReceiptLineList.Add(line1);
-            receipt.ReceiptLineList.Add(line2); 
-            receipt.ReceiptLineList.Add(line3); 
+        public IActionResult Create(Receipt receipt)
+        {            
 
             int success;
             try
@@ -55,28 +56,29 @@ namespace IT_Arg_API.Controllers
                 if (receipt != null && receipt.IdClient >= 0 && receipt.ReceiptLineList.Count > 0)
                 {
                     DataTable receiptLineTable = new DataTable();
-                    receiptLineTable.Columns.Add("IdProduct", typeof(int));
-                    receiptLineTable.Columns.Add("Quantity", typeof(int));
+                    receiptLineTable.Columns.Add("idProduct", typeof(int));
                     receiptLineTable.Columns.Add("Price", typeof(double));
-
-                    foreach (var line in receipt.ReceiptLineList)
-                    {
-                        DataRow row = receiptLineTable.NewRow();
-                        row["IdProduct"] = Convert.ToInt32(line.IdProduct);
-                        row["Quantity"] = line.Quantity;
-                        row["Price"] = line.Price;
-                        receiptLineTable.Rows.Add(row);
-                    }
+                    receiptLineTable.Columns.Add("count", typeof(int));
+                    
                     
                     Dictionary<string, object> args = new Dictionary<string, object>
                     {
                          {"pDate", receipt.Date},
                          {"pTotal", receipt.GetTotal()},
-                         {"pCuitUser", receipt.CuitUser},
+                         {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)},
                          {"pIdClient", receipt.IdClient}
                     };
 
-                    success = DBHelper.CallNonQueryTable("spReceiptCreate", args, receiptLineTable, "ReceiptLineType");
+                    foreach (var line in receipt.ReceiptLineList)
+                    {
+                        DataRow row = receiptLineTable.NewRow();
+                        row["idProduct"] = Convert.ToInt32(line.IdProduct);
+                        row["price"] = line.Price;
+                        row["count"] = line.Quantity;
+                        receiptLineTable.Rows.Add(row);
+                    }
+
+                    success = DBHelper.CallNonQueryTable("spVoucherCreate", args, receiptLineTable, "LineVoucherType");
 
                     if (success > 1)
                     {
