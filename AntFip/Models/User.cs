@@ -1,4 +1,6 @@
-﻿namespace IT_Arg_API.Models
+﻿using IT_Arg_API.Models.Helpers;
+
+namespace IT_Arg_API.Models
 {
     public class User
     {

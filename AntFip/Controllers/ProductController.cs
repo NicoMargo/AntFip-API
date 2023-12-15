@@ -2,6 +2,7 @@
 using IT_Arg_API.Models.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace IT_Arg_API.Controllers
 {
@@ -19,7 +20,7 @@ namespace IT_Arg_API.Controllers
             catch (Exception e)
             {
 
-                return StatusCode(500, "Error al obtener la informacion de los clientes." + e.Message);
+                return StatusCode(500, "Error al obtener la informacion de los productos." + e.Message);
             }
         }
 
@@ -35,7 +36,25 @@ namespace IT_Arg_API.Controllers
             }
             catch
             {
-                return StatusCode(500, "Error al obtener la informacion de los alumnos.");
+                return StatusCode(500, "Error al obtener la informacion de los productos.");
+            }
+        }
+
+        [HttpGet("IdUser")]
+        public IActionResult ProductGetByIdUser()
+        {
+            int? idUser = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            try
+            {
+                Dictionary<string, object> args = new Dictionary<string, object> {
+                    {"pIdUser", idUser}
+                };
+                return Ok(DBHelper.callProcedureReader("spProductGetByIdUser", args));
+            }
+            catch (Exception e)
+            {
+
+                return StatusCode(500, "Error al obtener la informacion de los productos." + e.Message);
             }
         }
 
@@ -130,7 +149,7 @@ namespace IT_Arg_API.Controllers
                 }
                 else
                 {
-                    success = "El nombre y descripcion no pueden estar vacios.";
+                    success = "Hay campos invalidos, por favor vuelva a intentar";
                 }
             }
             catch
