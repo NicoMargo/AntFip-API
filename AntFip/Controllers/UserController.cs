@@ -10,37 +10,6 @@ namespace IT_Arg_API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        [HttpPost]
-        [Route("userLogin")]
-        public async Task<IActionResult> Login(User user)
-        {
-            string token;
-            try
-            {
-                if (user.BusinessName != null && user.Password != null)
-                {
-                    Dictionary<string, object> args = new Dictionary<string, object> {
-                     {"pUsername",user.BusinessName},
-                     {"pPassword",user.Password},
-                    };
-
-                    string success = DBHelper.callProcedureReader("spUserLogin", args);
-                    if (success == "true")
-                    {
-                        token = JWT.GenerateToken(user);
-
-                        RefreshToken refreshToken = JWT.GenerateRefreshToken();
-
-                        return Ok(token);
-                    }
-                }
-                return NotFound("Usuario no encontrado");
-            }
-            catch
-            {
-                return NotFound("Usuario no encontrado");
-            }
-        }
 
         [HttpPost]
         public IActionResult Create(User user)
