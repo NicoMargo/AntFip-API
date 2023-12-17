@@ -51,7 +51,7 @@ namespace IT_Arg_API.Controllers
         }
 
         // GET BY CODE
-        [HttpGet("code/{id}")]
+        [HttpGet("code/{idCode}")]
         public IActionResult ProductGetByCode(int idCode)
         {
             try
