@@ -1,5 +1,6 @@
 ﻿using IT_Arg_API.Models;
 using IT_Arg_API.Models.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace IT_Arg_API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ReceiptController : ControllerBase
     {
 
@@ -40,7 +42,7 @@ namespace IT_Arg_API.Controllers
             {
                 Dictionary<string, object> args = new Dictionary<string, object>
                 {
-                    {"pId", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
+                    {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
                 };
                 return Ok(DBHelper.callProcedureReader("spVoucherGetAllByIdUser", args));
             }
@@ -63,13 +65,12 @@ namespace IT_Arg_API.Controllers
                 {
                     DataTable receiptLineTable = new DataTable();
                     receiptLineTable.Columns.Add("idProduct", typeof(int));
-                    receiptLineTable.Columns.Add("Price", typeof(double));
+                    receiptLineTable.Columns.Add("Price", typeof(decimal));
                     receiptLineTable.Columns.Add("count", typeof(int));
                     
                     
                     Dictionary<string, object> args = new Dictionary<string, object>
                     {
-                         {"pDate", receipt.Date},
                          {"pTotal", receipt.GetTotal()},
                          {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)},
                          {"pIdClient", receipt.IdClient}

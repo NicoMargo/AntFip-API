@@ -8,6 +8,7 @@ namespace IT_Arg_API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
 
@@ -17,7 +18,11 @@ namespace IT_Arg_API.Controllers
         {
             try
             {
-                return Ok(DBHelper.callProcedureReader("spProductGetAll"));
+                Dictionary<string, object> args = new Dictionary<string, object> {
+                    {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
+                };
+
+                return Ok(DBHelper.callProcedureReader("spProductGetByIdUser", args));
             }
             catch (Exception e)
             {
@@ -44,25 +49,24 @@ namespace IT_Arg_API.Controllers
             }
         }
 
-
-        // GET BY ID USER
-        [HttpGet("IdUser")]
-        public IActionResult ProductGetByIdUser()
+        // GET BY CODE
+        [HttpGet("code/{id}")]
+        public IActionResult ProductGetByCode(int idCode)
         {
-            int? idUser = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
-                    {"pIdUser", idUser}
+                    {"pCode",idCode}
                 };
-                return Ok(DBHelper.callProcedureReader("spProductGetByIdUser", args));
+                return Ok(DBHelper.callProcedureReader("spProductGetByCode", args));
             }
-            catch (Exception e)
+            catch
             {
-
-                return StatusCode(500, "Error al obtener la informacion de los productos." + e.Message);
+                return StatusCode(500, "Error al obtener la informacion de los productos.");
             }
         }
+
+
 
 
         // DELETE
@@ -108,6 +112,7 @@ namespace IT_Arg_API.Controllers
                          {"pPhoto",product.Photo},
                          {"pCode",product.Code},
                          {"pPrice",product.Price},
+                         {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
                     };
 
                     success = DBHelper.CallNonQuery("spProductCreate", args);
@@ -151,6 +156,8 @@ namespace IT_Arg_API.Controllers
                          {"pPhoto",product.Photo},
                          {"pCode",product.Code},
                          {"pPrice",product.Price},
+                         {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
+
                     };
 
                     success = DBHelper.CallNonQuery("spProductUpdate", args);
