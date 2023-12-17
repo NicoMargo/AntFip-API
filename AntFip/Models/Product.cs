@@ -10,8 +10,8 @@ namespace IT_Arg_API.Models
         private string _description;
         private int _stock;
         private string _photo;
-        private string _code;
-        private float _price;
+        private int _code;
+        private decimal _price;
         public Product()
         {
 
@@ -33,11 +33,11 @@ namespace IT_Arg_API.Models
 
             var priceLookup = productPricesList.ToDictionary(
                 item => (int)item["id"],
-                item => (double)item["price"]);
+                item => (decimal)item["price"]);
 
             foreach (var line in receiptLineList)
             {
-                if (priceLookup.TryGetValue(line.IdProduct, out double price))
+                if (priceLookup.TryGetValue(line.IdProduct, out decimal price))
                 {
                     line.Price = price;
                 }
@@ -51,7 +51,7 @@ namespace IT_Arg_API.Models
         public string Description { get => _description; set => _description = value; }
         public int Stock { get => _stock; set => _stock = value; }
         public string Photo { get => _photo; set => _photo = value; }
-        public string Code { get => _code; set => _code = value; }
-        public float Price { get => _price; set => _price = value; }
+        public int Code { get => _code; set => _code = value; }
+        public decimal Price { get => _price; set => _price = value; }
     }
 }

@@ -3,7 +3,7 @@
     public class ReceiptLine
     {
         private int _idProduct;
-        private double _price;
+        private decimal _price;
         private int _quantity;
 
         public ReceiptLine()
@@ -12,10 +12,10 @@
         }
 
         public int IdProduct { get => _idProduct; set => _idProduct = value; }
-        public double Price { get => _price; set => _price = value; }
+        public decimal Price { get => _price; set => _price = value; }
         public int Quantity { get => _quantity; set => _quantity = value; }
 
-        public double GetSubtotal()
+        public decimal GetSubtotal()
         {
             return _quantity * _price;
         }
