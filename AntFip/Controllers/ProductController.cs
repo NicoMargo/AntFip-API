@@ -140,16 +140,16 @@ namespace IT_Arg_API.Controllers
 
 
         // UPDATE
-        [HttpPost("Update/{id}")]
-        public IActionResult Update(Product product, int id)
+        [HttpPost("Update")]
+        public IActionResult Update(Product product)
         {
             string success = "Error al modificar el producto.";
             try
             {
-                if (product.Name != "" && product.Description != null && id != null && product.Stock != null && product.Code != null && product.Price != null)
+                if (product.Name != "" && product.Description != null && product.Id != null && product.Stock != null && product.Code != null && product.Price != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
-                         {"pId", id},
+                         {"pId", product.Id},
                          {"pName",product.Name},
                          {"pDescription",product.Description},
                          {"pStock",product.Stock},

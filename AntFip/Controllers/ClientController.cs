@@ -120,16 +120,16 @@ namespace IT_Arg_API.Controllers
 
 
         // UPDATE
-        [HttpPost("Update/{id}")]
-        public IActionResult Update(Client client, int id)
+        [HttpPost("Update")]
+        public IActionResult Update(Client client)
         {
             string success = "Error al modificar al cliente.";
             try
             {
-                if (client.Surname != "" && client.Name != "" && id != null && client.Dni != null)
+                if (client.Surname != "" && client.Name != "" && client.Id != null && client.Dni != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
-                         {"pId", id},
+                         {"pId", client.Id},
                          {"pName",client.Name},
                          {"pSurname",client.Surname},
                          {"pDni",client.Dni},
