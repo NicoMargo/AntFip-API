@@ -140,16 +140,16 @@ namespace IT_Arg_API.Controllers
 
 
         // UPDATE
-        [HttpPost("Update")]
-        public IActionResult Update(Product product)
+        [HttpPost("Update/{id}")]
+        public IActionResult Update(Product product, int id)
         {
             string success = "Error al modificar el producto.";
             try
             {
-                if (product.Name != "" && product.Description != null && product.Id != null && product.Stock != null && product.Code != null && product.Price != null)
+                if (product.Name != "" && product.Description != null && id != null && product.Stock != null && product.Code != null && product.Price != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
-                         {"pId", product.Id},
+                         {"pId", id},
                          {"pName",product.Name},
                          {"pDescription",product.Description},
                          {"pStock",product.Stock},
@@ -165,6 +165,11 @@ namespace IT_Arg_API.Controllers
                     if (success == "1")
                     {
                         return Ok();
+                    }
+                    else if (success == "-1")
+                    {
+                        success = "Error al crear el producto, el codigo proporcionado ya existe";
+                        return StatusCode(400, success);
                     }
                     else
                     {

@@ -18,10 +18,10 @@ namespace IT_Arg_API.Controllers
             string success = "";
             try
             {
-                if (user.Password != "" && user.BusinessName != "" && user.Cuit != null)
+                if (user.Password != "" && user.Name != "" && user.Cuit != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
-                         {"pName",user.BusinessName},
+                         {"pName",user.Name},
                          {"pPassword",user.Password},
                          {"pCuit",user.Cuit}
                     };
@@ -30,6 +30,12 @@ namespace IT_Arg_API.Controllers
 
                     if (success == "1")
                     {
+                        success = "Usuario creado con exito";
+                        return Ok(success);
+                    }
+                    else if(success == "-1")
+                    {
+                        success = "Error al crear el usuario, el cuit o el nombre de la empresa proporcionada ya existe";
                         return Ok(success);
                     }
                     else
@@ -63,9 +69,16 @@ namespace IT_Arg_API.Controllers
 
                 if (success == "1")
                 {
-                    return Ok();
+                    success = "Usuario eliminado con exito";
+                    return Ok(success);
                 }
-
+                else if (success == "-1")
+                {
+                    success = "Error al eliminar. Usuario no encontrado";
+                    return StatusCode(400, success);
+                }
+                
+                success = "Error al eliminar. Usuario no encontrado";
                 return StatusCode(500, success);
             }
             catch
