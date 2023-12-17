@@ -39,7 +39,8 @@ namespace IT_Arg_API.Controllers
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
-                    {"pId",id}
+                    {"pId",id},
+                    {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
                 };
                 return Ok(DBHelper.callProcedureReader("spProductGetById", args));
             }
@@ -56,7 +57,8 @@ namespace IT_Arg_API.Controllers
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
-                    {"pCode",idCode}
+                    {"pCode",idCode},
+                    {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
                 };
                 return Ok(DBHelper.callProcedureReader("spProductGetByCode", args));
             }
@@ -65,8 +67,6 @@ namespace IT_Arg_API.Controllers
                 return StatusCode(500, "Error al obtener la informacion de los productos.");
             }
         }
-
-
 
 
         // DELETE
@@ -98,7 +98,7 @@ namespace IT_Arg_API.Controllers
 
         // CREATE
         [HttpPost]
-        public IActionResult Create(Product product = null)
+        public IActionResult Create([FromBody]Product product)
         {
             string success = "Error al crear el producto.";
             try

@@ -39,7 +39,8 @@ namespace IT_Arg_API.Controllers
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
-                    {"pId",id}
+                    {"pId",id},
+                    {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
                 };
                 return Ok(DBHelper.callProcedureReader("spClientGetById", args));
             }
@@ -97,7 +98,9 @@ namespace IT_Arg_API.Controllers
                          {"pEmail",client.Email},
                          {"pIdUser", idUser},
                     };
+
                     success = DBHelper.CallNonQuery("spClientCreate", args);  
+
                     if (success == "1")
                     {
                         return Ok();
@@ -132,6 +135,7 @@ namespace IT_Arg_API.Controllers
                          {"pAddress",client.Address},
                          {"pPhone",client.Phone},
                          {"pEmail",client.Email},
+                         {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
                     };
                     success = DBHelper.CallNonQuery("spClientUpdate", args);
                     if (success == "1")

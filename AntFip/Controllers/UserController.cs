@@ -13,7 +13,7 @@ namespace IT_Arg_API.Controllers
 
         // CREATE
         [HttpPost]
-        public IActionResult Create(User user)
+        public IActionResult Create([FromBody]User user)
         {
             string success = "";
             try
