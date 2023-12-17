@@ -113,6 +113,7 @@ namespace IT_Arg_API.Controllers
             }                
             catch
             {
+                success = "Hay campos invalidos, por favor vuelva a intentarlo.";
             }
             return StatusCode(500, success);
         }
