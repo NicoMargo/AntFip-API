@@ -87,7 +87,7 @@ namespace IT_Arg_API.Controllers
 
             try
             {
-                if (client.Surname != null && client.Name != null && idUser != null)
+                if (client.Surname != "" && client.Name != "" && idUser != null && client.Dni != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
                          {"pName",client.Name},
@@ -126,7 +126,7 @@ namespace IT_Arg_API.Controllers
             string success = "Error al modificar al cliente.";
             try
             {
-                if (client.Surname != null && client.Name != null && client.Id != null)
+                if (client.Surname != "" && client.Name != "" && client.Id != null && client.Dni != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
                          {"pId", client.Id},

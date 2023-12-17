@@ -18,7 +18,7 @@ namespace IT_Arg_API.Controllers
             string success = "";
             try
             {
-                if (user.Password != null && user.BusinessName != null && user.Cuit != null)
+                if (user.Password != "" && user.BusinessName != "" && user.Cuit != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
                          {"pName",user.BusinessName},

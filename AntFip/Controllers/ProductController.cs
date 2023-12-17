@@ -103,7 +103,7 @@ namespace IT_Arg_API.Controllers
             string success = "Error al crear el producto.";
             try
             {
-                if (product.Name != null && product.Description != null)
+                if (product.Name != "" && product.Description != null && product.Stock != null && product.Code != null && product.Price != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
                          {"pName",product.Name},
@@ -146,7 +146,7 @@ namespace IT_Arg_API.Controllers
             string success = "Error al modificar el producto.";
             try
             {
-                if (product.Name != null && product.Description != null && product.Id != null)
+                if (product.Name != "" && product.Description != null && product.Id != null && product.Stock != null && product.Code != null && product.Price != null)
                 {
                     Dictionary<string, object> args = new Dictionary<string, object> {
                          {"pId", product.Id},
