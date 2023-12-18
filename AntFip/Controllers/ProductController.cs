@@ -187,5 +187,47 @@ namespace IT_Arg_API.Controllers
             return StatusCode(500, success);
         }
 
+        // UPDATE STOCK
+        [HttpPost("UpdateStock")]
+        public IActionResult UpdateStock(Product product)
+        {
+            string success = "Error al modificar el producto.";
+            try
+            {
+                if (product.Id != null && product.Stock != null)
+                {
+                    Dictionary<string, object> args = new Dictionary<string, object> {
+                         {"pId", product.Id},
+                         {"pStock",product.Stock},
+                         {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
+                    };
+
+                    success = DBHelper.CallNonQuery("spUpdateStockProduct", args);
+
+                    if (success == "1")
+                    {
+                        return Ok();
+                    }
+                    else if (success == "-1")
+                    {
+                        success = "Error al modificar el stock, vuelva a intentarlo";
+                        return StatusCode(400, success);
+                    }
+                    else
+                    {
+                        return StatusCode(500, success);
+                    }
+                }
+                else
+                {
+                    success = "Error al modificar el stock, vuelva a intentarlo";
+                }
+            }
+            catch
+            {
+            }
+            return StatusCode(500, success);
+        }
+
     }
 }
