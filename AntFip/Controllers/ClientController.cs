@@ -8,6 +8,7 @@ namespace IT_Arg_API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ClientController : ControllerBase
     {
 
@@ -32,17 +33,17 @@ namespace IT_Arg_API.Controllers
         }
 
 
-        // GET BY ID 
-        [HttpGet("{id}")]
-        public IActionResult ClientGetById(int id)
+        // GET BY Dni
+        [HttpGet("{dni}")]
+        public IActionResult ClientGetByDni(int dni)
         { 
             try
             {
                 Dictionary<string, object> args = new Dictionary<string, object> {
-                    {"pId",id},
+                    {"pDni",dni},
                     {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)}
                 };
-                return Ok(DBHelper.callProcedureReader("spClientGetById", args));
+                return Ok(DBHelper.callProcedureReader("spClientGetByDni", args));
             }
             catch
             {
