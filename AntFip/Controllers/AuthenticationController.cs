@@ -101,7 +101,6 @@ namespace IT_Arg_API.Controllers
 
         // LOGOUT
         [HttpGet]
-        [Authorize]
         [Route("Logout")]
         public async Task<IActionResult> Logout()
         {

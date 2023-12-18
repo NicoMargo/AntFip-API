@@ -106,11 +106,17 @@ namespace IT_Arg_API.Controllers
                     {
                         return Ok();
                     }
-                    else
+                    else if (success == "-1")
                     {
-                        return StatusCode(500, success);
+                        success = "Error al crear el cliente, el dni proporcionado ya existe";
+                        return StatusCode(400, success);
                     }
+                }               
+                else
+                {
+                    return StatusCode(500, success);
                 }
+                
             }                
             catch
             {
