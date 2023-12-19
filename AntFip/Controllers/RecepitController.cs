@@ -59,6 +59,8 @@ namespace IT_Arg_API.Controllers
         {            
 
             int success;
+            decimal total;
+
             try
             {
                 if (receipt != null && receipt.IdClient >= 0 && receipt.ReceiptLineList.Count > 0)
@@ -67,11 +69,19 @@ namespace IT_Arg_API.Controllers
                     receiptLineTable.Columns.Add("idProduct", typeof(int));
                     receiptLineTable.Columns.Add("Price", typeof(decimal));
                     receiptLineTable.Columns.Add("count", typeof(int));
-                    
-                    
-                    Dictionary<string, object> args = new Dictionary<string, object>
+
+                    total = receipt.GetTotal();
+
+                    if (total.ToString().Length > 18)
                     {
-                         {"pTotal", receipt.GetTotal()},
+
+                        return StatusCode(500, "Precio total excede el limite. Por favor revise la cantidad de productos.");
+
+                    }
+
+                Dictionary<string, object> args = new Dictionary<string, object>
+                    {
+                         {"pTotal", total},
                          {"pIdUser", Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value)},
                          {"pIdClient", receipt.IdClient}
                     };
@@ -84,6 +94,8 @@ namespace IT_Arg_API.Controllers
                         row["count"] = line.Quantity;
                         receiptLineTable.Rows.Add(row);
                     }
+
+                    
 
                     success = DBHelper.CallNonQueryTable("spVoucherCreate", args, receiptLineTable, "LineVoucherType");
 

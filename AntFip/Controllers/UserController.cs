@@ -36,7 +36,7 @@ namespace IT_Arg_API.Controllers
                     else if(success == "-1")
                     {
                         success = "Error al crear el usuario, el cuit o el nombre de la empresa proporcionada ya existe";
-                        return Ok(success);
+                        return StatusCode(400, success);
                     }
                     else
                     {
